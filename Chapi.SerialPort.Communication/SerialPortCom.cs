@@ -111,6 +111,10 @@ namespace Chapi.SerialPortLib.Communication
 
         #region Serial Port handling
 
+        /// <summary>
+        /// Opens the port.
+        /// </summary>
+        /// <returns></returns>
         private bool Open()
         {
             bool success = false;
@@ -146,6 +150,34 @@ namespace Chapi.SerialPortLib.Communication
             return success;
         }
 
+        /// <summary>
+        /// Close port.
+        /// </summary>
+        private void Close()
+        {
+            lock (accessLock)
+            {
+                // Stop reader thread
+                if(reader != null)
+                {
+                    if (!reader.Join(5000))
+                        reader.Abort();
+                    reader = null;
+                }
+                if (_serialPort != null)
+                {
+                    _serialPort.ErrorReceived -= HandleErrorReceived;
+                    if (_serialPort.IsOpen)
+                    {
+                        _serialPort.Close();
+                        OnConnectionStatusChanged(new ConnectionStatusChangedEventArgs(false));
+                    }
+                    _serialPort.Dispose();
+                    _serialPort = null;
+                }
+                hasReadWriteError = true;
+            }
+        }
         #endregion
     }
 }

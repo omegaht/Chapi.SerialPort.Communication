@@ -59,5 +59,57 @@ namespace Chapi.SerialPortLib.Communication
         public event MessageReceivedEventHandler MessageReceived;
 
         #endregion
+
+        #region Public Members
+
+        /// <summary>
+        /// Value indicating if the serial port is connected.
+        /// </summary>
+        public bool IsConnected
+        {
+            get { return _serialPort != null && !hasReadWriteError && !disconnectRequested; }
+        }
+        /// <summary>
+        /// Connect to the serial port.
+        /// </summary>
+        public bool Connect()
+        {
+            if (disconnectRequested)
+            {
+                return false;
+            }
+            lock (accessLock)
+            {
+                Disconnect();
+                Open();
+                connectionWatcher = new Thread(ConnectionWatcherTask);
+                connectionWatcher.Start();
+            }
+            return IsConnected;
+        }
+        /// <summary>
+        /// Disconnect the serial port.
+        /// </summary>
+        public void Disconnect()
+        {
+            if (disconnectRequested)
+                return;
+            disconnectRequested = true;
+            Close();
+            lock (accessLock)
+            {
+                if (connectionWatcher != null)
+                {
+                    if (connectionWatcher.Join(5000))
+                        connectionWatcher.Abort();
+                    connectionWatcher = null;
+                }
+                disconnectRequested = false;
+            }
+        }
+
+        
+
+        #endregion
     }
 }

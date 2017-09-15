@@ -178,6 +178,12 @@ namespace Chapi.SerialPortLib.Communication
                 hasReadWriteError = true;
             }
         }
+
+        private void HandleErrorReceived(object sender, SerialErrorReceivedEventArgs e)
+        {
+            logger.Error(e.EventType);
+        }
+
         #endregion Serial Port handling
     }
 }

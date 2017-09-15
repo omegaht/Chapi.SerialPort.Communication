@@ -107,6 +107,50 @@ namespace Chapi.SerialPortLib.Communication
                 disconnectRequested = false;
             }
         }
+        /// <summary>
+        /// Sets the serial port options.
+        /// </summary>
+        /// <param name="portname">Portname.</param>
+        /// <param name="baudrate">Baudrate.</param>
+        /// <param name="stopbits">Stopbits.</param>
+        /// <param name="parity">Parity.</param>
+        public void SetPort(string portname, int baudrate = 115200, StopBits stopbits = StopBits.One, Parity parity = Parity.None)
+        {
+            if (_portName != portname)
+            {
+                // set to error so that the connection watcher will reconnect
+                // using the new port
+                hasReadWriteError = true;
+            }
+            _portName = portname;
+            _baudRate = baudrate;
+            _stopBits = stopbits;
+            _parity = parity;
+        }
+
+        /// <summary>
+        /// Sends the message.
+        /// </summary>
+        /// <returns><c>true</c>, if message was sent, <c>false</c> otherwise.</returns>
+        /// <param name="message">Message.</param>
+        public bool SendMessage(byte[] message)
+        {
+            bool success = false;
+            if (IsConnected)
+            {
+                try
+                {
+                    _serialPort.Write(message, 0, message.Length);
+                    success = true;
+                    logger.Debug(BitConverter.ToString(message));
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e);
+                }
+            }
+            return success;
+        }
         #endregion Public Members
 
         #region Serial Port handling

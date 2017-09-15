@@ -21,7 +21,7 @@ namespace Chapi.SerialPortLib.Communication
         }
     }
 
-    public class MessageRecivedEventArgs
+    public class MessageReceivedEventArgs
     {
         /// <summary>
         /// The recived data.
@@ -31,7 +31,7 @@ namespace Chapi.SerialPortLib.Communication
         /// Initializes an instance of the <see cref="SerialPortLib.MessageReceivedEventArgs"/> class.
         /// </summary>
         /// <param name="data"></param>
-        public MessageRecivedEventArgs(byte[] data)
+        public MessageReceivedEventArgs(byte[] data)
         {
             Data = data;
         }

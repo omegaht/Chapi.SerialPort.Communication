@@ -36,7 +36,27 @@ namespace Chapi.SerialPortLib.Communication
 
         #region Public Events
 
+        /// <summary>
+        /// Connected state change event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         public delegate void ConnectionStatusChangedEventHandler(object sender, ConnectionStatusChangedEventArgs args);
+        /// <summary>
+        /// Event for connected state change.
+        /// </summary>
+        public event ConnectionStatusChangedEventHandler ConnectionStatusChanged;
+
+        /// <summary>
+        /// Message received event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        public delegate void MessageReceivedEventHandler(object sender, MessageReceivedEventArgs args);
+        /// <summary>
+        /// Event for message received.
+        /// </summary>
+        public event MessageReceivedEventHandler MessageReceived;
 
         #endregion
     }

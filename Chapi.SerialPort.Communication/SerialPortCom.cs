@@ -31,6 +31,13 @@ namespace Chapi.SerialPortLib.Communication
 
         private object accessLock = new object();
         private bool disconnectRequested = false;
+
+        #endregion
+
+        #region Public Events
+
+        public delegate void ConnectionStatusChangedEventHandler(object sender, ConnectionStatusChangedEventArgs args);
+
         #endregion
     }
 }

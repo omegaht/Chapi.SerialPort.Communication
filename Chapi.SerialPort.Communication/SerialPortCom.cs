@@ -5,7 +5,8 @@ using System.Text;
 
 namespace Chapi.SerialPort.Communication
 {
-    public class Class1
+    public class SerialPortCom
     {
+
     }
 }

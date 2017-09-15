@@ -178,6 +178,6 @@ namespace Chapi.SerialPortLib.Communication
                 hasReadWriteError = true;
             }
         }
-        #endregion
+        #endregion Serial Port handling
     }
 }

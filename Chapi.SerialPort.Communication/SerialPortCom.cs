@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using NLog;
 
+
 namespace Chapi.SerialPort.Communication
 {
     /// <summary>

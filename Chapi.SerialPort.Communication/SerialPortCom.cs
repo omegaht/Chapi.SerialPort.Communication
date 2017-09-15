@@ -185,5 +185,43 @@ namespace Chapi.SerialPortLib.Communication
         }
 
         #endregion Serial Port handling
+
+        #region Background Tasks
+
+        private void ReaderTask()
+        {
+            while (IsConnected)
+            {
+                int messageLenght = 0;
+                try
+                {
+                    messageLenght = _serialPort.BytesToRead;
+                    if (messageLenght > 0)
+                    {
+                        byte[] message = new byte[messageLenght];
+                        int readBytes = 0;
+                        while (_serialPort.Read(message, readBytes, messageLenght - readBytes) <= 0)
+                            ;// no
+                        if (MessageReceived != null)
+                        {
+                            OnMessageReceived(new MessageReceivedEventArgs(message));
+                        }
+                    }
+                    else
+                    {
+                        Thread.Sleep(100);
+                    }
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e);
+                    hasReadWriteError = true;
+                    Thread.Sleep(1000);
+                    throw;
+                }
+            }
+        }
+
+        #endregion
     }
 }

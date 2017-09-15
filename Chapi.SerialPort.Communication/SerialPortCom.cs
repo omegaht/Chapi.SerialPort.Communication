@@ -222,6 +222,43 @@ namespace Chapi.SerialPortLib.Communication
             }
         }
 
-        #endregion
+        private void ConnectionWatcherTask()
+        {
+            // Reconnects if the connection is drop or if an I/O error occurs.
+            while (!disconnectRequested)
+            {
+                if (hasReadWriteError)
+                {
+                    try
+                    {
+                        Close();
+                        //wait for 1 second before reconnecting
+                        Thread.Sleep(1000);
+                        if (!disconnectRequested)
+                        {
+                            try
+                            {
+                                Open();    
+                            }
+                            catch (Exception e)
+                            {
+                                logger.Error(e);
+                                throw;
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(e);
+                    }
+                }
+                if (!disconnectRequested)
+                {
+                    Thread.Sleep(1000);
+                }
+            }
+        }
+
+        #endregion Background Tasks
     }
 }

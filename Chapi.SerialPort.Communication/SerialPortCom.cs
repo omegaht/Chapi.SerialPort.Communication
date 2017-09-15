@@ -107,8 +107,44 @@ namespace Chapi.SerialPortLib.Communication
                 disconnectRequested = false;
             }
         }
+        #endregion Public Members
 
-        
+        #region Serial Port handling
+
+        private bool Open()
+        {
+            bool success = false;
+            lock (accessLock)
+            {
+                Close();
+                try
+                {
+                    _serialPort = new SerialPort();
+                    _serialPort.ErrorReceived += HandleErrorReceived;
+                    _serialPort.PortName = _portName;
+                    _serialPort.BaudRate = _baudRate;
+                    _serialPort.StopBits = _stopBits;
+                    _serialPort.Parity = _parity;
+
+                    _serialPort.Open();
+                    success = true;
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e);
+                    Close();
+                }
+                if (_serialPort != null && _serialPort.IsOpen)
+                {
+                    hasReadWriteError = false;
+                    //Initiate reader thread/ task
+                    reader = new Thread(ReaderTask);
+                    reader.Start();
+                    OnConnectionStatusChanged(new ConnectionStatusChangedEventArgs(true));
+                }
+            }
+            return success;
+        }
 
         #endregion
     }

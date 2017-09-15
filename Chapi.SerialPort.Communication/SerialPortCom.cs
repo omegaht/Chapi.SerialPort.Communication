@@ -260,5 +260,31 @@ namespace Chapi.SerialPortLib.Communication
         }
 
         #endregion Background Tasks
+
+        #region Events Raising
+
+        /// <summary>
+        /// Raises the connected state change event.
+        /// </summary>
+        /// <param name="args"></param>
+        protected virtual void OnConnectionStatusChanged(ConnectionStatusChangedEventArgs args)
+        {
+            logger.Debug(args.Connected);
+            if (ConnectionStatusChanged != null)
+            {
+                ConnectionStatusChanged(this, args);
+            }
+        }
+
+        protected virtual void OnMessageReceived(MessageReceivedEventArgs args)
+        {
+            logger.Debug(BitConverter.ToString(args.Data));
+            if (MessageReceived != null)
+            {
+                MessageReceived(this, args);
+            }
+        }
+
+        #endregion Events Raising
     }
 }
